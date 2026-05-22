@@ -107,18 +107,18 @@ int main(){
             c = (play - 1) % 3;
         }
         board[r][c] = PLAYER;
-        game();
         if (checkVitory(PLAYER) == 1){
             printf("\n   ----You win !----");
             return 0;
         }
-
+        
         match++;
         if (match == 9) break;
-
+        
         printf("===================================\n");
         printf("\n      AI Turn\n");
-        printf("     AI thinking...\n");
+        game();
+        printf("\n     AI thinking...\n");
         printf("\n===================================\n");
         sleep(2);
         if (bestPlay() == 1){
