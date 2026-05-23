@@ -1,6 +1,6 @@
 # >_ terminal-games 🖥️
 
-##Games
+## 🕹️ Games
 
 ### ⌗ Tic-Tac-Toe
 The basic Tic-Tac-Toe game with a simple AI opponent.
