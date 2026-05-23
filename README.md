@@ -1,4 +1,4 @@
-# >_ terminal-games 🖥️
+# >_ terminal-games 
 
 ## 🕹️ Games
 
