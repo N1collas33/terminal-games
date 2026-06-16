@@ -17,10 +17,9 @@
 #endif
 
 #define maxHand 10
-#define REFRESH printGame(dealerHand,dealerTotal,playerCount,playerHand,playerTotal,dealerTurn);
+#define REFRESH printGame(dealerCount,dealerHand,dealerTotal,playerCount,playerHand,playerTotal,dealerTurn);
 
 char *cards[] = {"A", "2", "3", "4", "5", "6", "7", "8", "9", "10", "J", "Q", "K"};
-int playerCount = 2, dealerCount = 2;
 
 int cardValue(char *value){
     if(strcmp(value, "J") == 0 || strcmp(value, "Q") == 0 || strcmp(value, "K") == 0) return 10;
@@ -53,7 +52,7 @@ void printCard(char *value, int line) {
         case 0: printf(" _____ "); break;
         case 1: printf("|     |"); break;
         case 2:
-            if (value != "10"){
+            if (strcmp(value, "10") != 0){
                 printf("|  %s  |", value); break;
             }else{
                 printf("| %s  |", value); break;
@@ -63,7 +62,7 @@ void printCard(char *value, int line) {
     }
 }
 
-void printGame(char *dealerHand[], int dealerTotal, int playerCount, char *playerHand[], int playerTotal, int dealerTurn){
+void printGame(int dealerCount, char *dealerHand[], int dealerTotal, int playerCount, char *playerHand[], int playerTotal, int dealerTurn){
     CLEAR;
     
     printf("          DEALER HAND\n\n");
@@ -132,115 +131,126 @@ void printGame(char *dealerHand[], int dealerTotal, int playerCount, char *playe
 
 int main(){
     srand(time(NULL));
-    int dealerTurn = 0;
     printf("\n===========TERMINAL BLACKJACK===========\n");
     printf("           PRESS ENTER TO PLAY\n");
     getchar();
-    CLEAR;
+    char playAgain;
     
-    printf("          DEALER HAND\n\n");
-    int dealerTotal = 0;
-    char *dealerHand[maxHand];
-    
-    for(int i = 0; i < 2; i++){
-        dealerHand[i] = randomCard();
-    }
-    dealerTotal = handTotal(dealerHand, dealerCount); 
-    
-    for (int line = 0; line < 5; line++){
-        printf("        ");
-        printCard(dealerHand[0], line);
-        printf(" ");
-        switch(line){ 
-            case 0: printf(" _____ "); break;
-            case 1: printf("|/////|"); break;
-            case 2: printf("|/////|"); break;
-            case 3: printf("|/////|"); break;
-            case 4: printf("|_____|"); break;
-        }
-        printf("                    ");
-        switch(line){ 
-            case 0: printf(" _____ "); break;
-            case 1: printf("|/////|"); break;
-            case 2: printf("|/////|"); break;
-            case 3: printf("|/////|"); break;
-            case 4: printf("|_____|"); break;
-        }
-        printf("\n");
-    }
-    printf("\n               %d \n\n", cardValue(dealerHand[0])); // show only the value of the revealed card
-    
-    printf("       Blackjack pays 3 to 2\n");
-    printf("   Dealer must draw to 16 and stand on 17\n\n");
-    
-    printf("          PLAYER HAND\n\n");
-    
-    int playerTotal = 0;
-    char *playerHand[maxHand];
-    
-    for(int i = 0; i < 2; i++){
-        playerHand[i] = randomCard();
-        playerTotal += cardValue(playerHand[i]);
-    }
-    
-    for (int line = 0; line < 5; line++){
-        printf("        ");
-        for(int i = 0; i < playerCount; i++){
-            printCard(playerHand[i], line);
-            printf(" ");
-        }
-        printf("\n");
-    }
-    playerTotal = handTotal(playerHand, playerCount);
-    printf("\n               %d\n\n", playerTotal);
 
-    if(playerTotal == 21) printf("           BLACKJACK!");
-    
-    char op;
-    while(playerTotal < 21){
-        printf("        [H] HIT\t [S] STAND\n");
-        scanf(" %c", &op);
-        if (op == 's' || op == 'S') break;
-        else{
-            playerHand[playerCount] = randomCard();
-            playerCount++;
-            playerTotal = handTotal(playerHand, playerCount);
-            REFRESH;
-            if(playerTotal > 21){
-                printf("           YOU BUSTED!\n");
-                break;
-            }
-        }
-    }
+    do {
+        CLEAR;
+        int playerCount = 2, dealerCount = 2, dealerTurn = 0;
 
-    dealerTurn = 1;
-    sleep(2);
-    REFRESH; 
+    	printf("          DEALER HAND\n\n");
+    	int dealerTotal = 0;
+    	char *dealerHand[maxHand];
     
-    while(dealerTotal < 17){
-        dealerHand[dealerCount] = randomCard();
-        dealerCount++;
-        dealerTotal = handTotal(dealerHand, dealerCount);
-        sleep(2);
-        REFRESH;
-    }
+    	for (int i = 0; i < 2; i++) {
+    		dealerHand[i] = randomCard();
+    	}
+    	dealerTotal = handTotal(dealerHand, dealerCount);
     
-    sleep(2);
-    CLEAR;
+    	for (int line = 0; line < 5; line++) {
+    		printf("        ");
+    		printCard(dealerHand[0], line);
+    		printf(" ");
+    		switch (line) {
+    			case 0: printf(" _____ "); break;
+    			case 1: printf("|/////|"); break;
+    			case 2: printf("|/////|"); break;
+    			case 3: printf("|/////|"); break;
+    			case 4: printf("|_____|"); break;
+    		}
+    		printf("                    ");
+    		switch (line) {
+    			case 0: printf(" _____ "); break;
+    			case 1: printf("|/////|"); break;
+    			case 2: printf("|/////|"); break;
+    			case 3: printf("|/////|"); break;
+    			case 4: printf("|_____|"); break;
+    		}
+    		printf("\n");
+    	}
+    	printf("\n               %d \n\n", cardValue(dealerHand[0]));
     
-    printf("\n\n\n\n\n\n\n\n");
-    if(playerTotal > 21){
-        printf("           YOU LOSE!");
-    }else if(dealerTotal > 21){
-        printf("           YOU WIN!");
-    }else if(playerTotal == dealerTotal){
-        printf("           PUSH!");
-    }else if(playerTotal > dealerTotal){
-        printf("           YOU WIN!");
-    }else{
-        printf("           YOU LOSE");
-    }
-    printf("\n\n\n\n\n\n\n\n");
-
+    	printf("       Blackjack pays 3 to 2\n");
+    	printf("   Dealer must draw to 16 and stand on 17\n\n");
+    
+    	printf("          PLAYER HAND\n\n");
+    
+    	int playerTotal = 0;
+    	char *playerHand[maxHand];
+    
+    	for (int i = 0; i < 2; i++) {
+    		playerHand[i] = randomCard();
+    		playerTotal += cardValue(playerHand[i]);
+    	}
+    
+    	for (int line = 0; line < 5; line++) {
+    		printf("        ");
+    		for (int i = 0; i < playerCount; i++) {
+    			printCard(playerHand[i], line);
+    			printf(" ");
+    		}
+    		printf("\n");
+    	}
+    	playerTotal = handTotal(playerHand, playerCount);
+    	printf("\n               %d\n\n", playerTotal);
+    
+    	if (playerTotal == 21)
+    		printf("           BLACKJACK!");
+    
+    	char op;
+    	while (playerTotal < 21) {
+    		printf("        [H] HIT\t [S] STAND\n");
+    		scanf(" %c", &op);
+    	    getchar();
+    		if (op == 's' || op == 'S')
+    			break;
+    		else {
+    			playerHand[playerCount] = randomCard();
+    			playerCount++;
+    			playerTotal = handTotal(playerHand, playerCount);
+    			REFRESH;
+    			if (playerTotal > 21) {
+    				printf("           YOU BUSTED!\n");
+    				break;
+    			}
+    		}
+    	}
+    
+    	dealerTurn = 1;
+    	sleep(2);
+    	REFRESH;
+    
+    	while (dealerTotal < 17) {
+    		dealerHand[dealerCount] = randomCard();
+    		dealerCount++;
+    		dealerTotal = handTotal(dealerHand, dealerCount);
+    		sleep(2);
+    		REFRESH;
+    	}
+    
+    	sleep(2);
+    	CLEAR;
+    
+    	printf("\n\n\n\n\n\n\n\n");
+    	if (playerTotal > 21) {
+    		printf("           YOU LOSE!");
+    	} else if (dealerTotal > 21) {
+    		printf("           YOU WIN!");
+    	} else if (playerTotal == dealerTotal) {
+    		printf("           PUSH!");
+    	} else if (playerTotal > dealerTotal) {
+    		printf("           YOU WIN!");
+    	} else {
+    		printf("           YOU LOSE!");
+    	}
+    	printf("\n\n     PRESS ENTER TO PLAY AGAIN\n");
+    	printf("     PRESS ANY OTHER KEY TO QUIT\n");
+    	playAgain = getchar();
+    	printf("\n\n\n\n\n\n\n\n");
+    } while (playAgain == '\n');
+    
     return 0;
 }
