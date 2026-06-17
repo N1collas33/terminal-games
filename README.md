@@ -8,7 +8,7 @@ After the player makes a move, the AI responds automatically.
 
 ⭕❌ The AI can:
 - Block the player winning move.
-- Making hte correct move to win.
+- Making the correct move to win.
 - Prioritizing the center position.
 
 ## 🛠️ How to build & run.
